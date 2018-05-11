@@ -40,4 +40,27 @@ Either I was doing extra or this phase's difficulty exponetally rose. I had to p
 \paragraph{Thoughts}
 This phase was a lot harded than phase 2 and now I am scared of the rest of the phases.
 
+\section{Phase 3}
+\paragraph{Answer}
+12345 (Can have multiple answers)
+
+\paragraph{Patch}
+This patched version changes the JE from last patch to a JMP so it will always run.
+
+\begin{verbatim}
+PREV PATCH
+401466:   74 60                   je    4014c8 <_start+0x93>
+
+PATCHED
+401466:   eb 60                   jmp    4014c8 <_start+0x93>
+\end{verbatim}
+
+\paragraph{Discovery}
+Math is no fun. So I ran through the program once and I learned that this phase would catinate your previous entry (phase 2) to your entry from this phase. It would then take the length of the new string and store it (lets call it var a). Then it would run a sscan on the catinated string looking for '\%u' numbers. It takes the number it found in the string and stores it into the stack (var b). Then it divides var b by var a. Stores that result into var b. Shifts it to the right by 0x2 and stores it into var b. then multiplies var b against 0xaaaaaaab. Then the higher 32 bits are moved into EAX. EAX is then shifted to the right by 1 bit and stored into var b. 
+Var a and var b are then compared. 
+So the unsigned int will be divided by the length of the string, then divided by 4. Then multiplied by 0xaaaaaaab. Then divided by 32. Then divived by 2.
+
+\paragraph{Thoughts}
+This phase was hard but not as big of a difficulty jump compared to the last one. I also don't like math so...
+
 \end{document}
