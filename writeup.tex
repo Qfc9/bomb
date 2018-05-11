@@ -19,4 +19,25 @@ I ran strings on bomb and found the string swordfish by a bunch of other strings
 \paragraph{Thoughts}
 I am happy that phase 1 was easy to solve. I hope the rest of the phases are just as easy.
 
+\section{Phase 2}
+\paragraph{Answer}
+eharmon (Current user's username)
+
+\paragraph{Patch}
+The patch can be found in the patch folder and is called bomb-phase2. I patched line 0x401466 in \_start. I beleave this was code to stop other programs from running bomb. It now can be debugged with GDB but if you run it normally it will say it 'segment fault'ed. It doesn't actually seg fault. Probably because now it has to be run in something else to work properly. Might chage it later to a JMP instead of a JE.
+
+\begin{verbatim}
+ORIGINAL
+401466:   75 60                   jne    4014c8 <_start+0x93>
+
+PATCHED
+401466:   74 60                   je    4014c8 <_start+0x93>
+\end{verbatim}
+
+\paragraph{Discovery}
+Either I was doing extra or this phase's difficulty exponetally rose. I had to patch the bomb file to be able to run it in GDB. If the file is ran now, it will output that is segment faulted but it didn't. The program is a liar. Now I could run it in GDB and it said it couldn't find a main(). So I had it start at \_start. I steped through until I got to phase 1. I entered the answer for phase 1 when I got to it's puts(). I continued to step through until I got to phase 2. For it's puts() I just entered 'J'. I steped until I went past the $<$getenvs@plt$>$, after that I noticed a lot of registers changed. I looked rax and noticed it had my username in it. So im assuming getenvs gets the enviroment variables (aka my username).
+
+\paragraph{Thoughts}
+This phase was a lot harded than phase 2 and now I am scared of the rest of the phases.
+
 \end{document}
