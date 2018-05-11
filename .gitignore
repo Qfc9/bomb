@@ -1,2 +1,9 @@
-!.gitignore
 bomb*
+objdump*
+writeup*
+answers
+texput*
+
+!.gitignore
+!writeup.tex
+!bomb-phase2
