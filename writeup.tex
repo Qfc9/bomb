@@ -14,7 +14,7 @@
 swordfish
 
 \paragraph{Discovery}
-I ran strings on bomb and found the string swordfish by a bunch of other strings that outputed to the screen. So I typed it in and it worked.
+I ran strings on bomb and found the string swordfish by a bunch of other strings that outputted to the screen. So I typed it in and it worked.
 
 \paragraph{Thoughts}
 I am happy that phase 1 was easy to solve. I hope the rest of the phases are just as easy.
@@ -24,7 +24,7 @@ I am happy that phase 1 was easy to solve. I hope the rest of the phases are jus
 eharmon (Current user's username)
 
 \paragraph{Patch}
-The patch can be found in the patch folder and is called bomb-phase2. I patched line 0x401466 in \_start. I beleave this was code to stop other programs from running bomb. It now can be debugged with GDB but if you run it normally it will say it 'segment fault'ed. It doesn't actually seg fault. Probably because now it has to be run in something else to work properly. Might chage it later to a JMP instead of a JE.
+The patch can be found in the patch folder and is called bomb-phase2. I patched line 0x401466 in \_start. I believe this was code to stop other programs from running bomb. It now can be debugged with GDB but if you run it normally it will say it 'segment fault'ed. It doesn't actually seg fault. Probably because now it has to be run in something else to work properly. Might change it later to a JMP instead of a JE.
 
 \begin{verbatim}
 ORIGINAL
@@ -35,10 +35,10 @@ PATCHED
 \end{verbatim}
 
 \paragraph{Discovery}
-Either I was doing extra or this phase's difficulty exponetally rose. I had to patch the bomb file to be able to run it in GDB. If the file is ran now, it will output that is segment faulted but it didn't. The program is a liar. Now I could run it in GDB and it said it couldn't find a main(). So I had it start at \_start. I steped through until I got to phase 1. I entered the answer for phase 1 when I got to it's puts(). I continued to step through until I got to phase 2. For it's puts() I just entered 'J'. I steped until I went past the $<$getenvs@plt$>$, after that I noticed a lot of registers changed. I looked rax and noticed it had my username in it. So im assuming getenvs gets the enviroment variables (aka my username).
+Either I was doing extra or this phase's difficulty was exponentially harder. I had to patch the bomb file to be able to run it in GDB. If the file is ran now, it will output that is segment faulted but it didn't. The program is a liar. Now I could run it in GDB and it said it couldn't find a main(). So I had it start at \_start. I stepped through until I got to phase 1. I entered the answer for phase 1 when I got to it's puts(). I continued to step through until I got to phase 2. For it's puts() I just entered 'J'. I stepped until I went past the $<$getenvs@plt$>$, after that I noticed a lot of registers changed. I looked rax and noticed it had my username in it. So I'm assuming getenvs gets the environment variables (aka my username).
 
 \paragraph{Thoughts}
-This phase was a lot harded than phase 2 and now I am scared of the rest of the phases.
+This phase was a lot harder than phase 2 and now I am scared of the rest of the phases.
 
 \section{Phase 3}
 \paragraph{Answer}
@@ -56,11 +56,22 @@ PATCHED
 \end{verbatim}
 
 \paragraph{Discovery}
-Math is no fun. So I ran through the program once and I learned that this phase would catinate your previous entry (phase 2) to your entry from this phase. It would then take the length of the new string and store it (lets call it var a). Then it would run a sscan on the catinated string looking for '\%u' numbers. It takes the number it found in the string and stores it into the stack (var b). Then it divides var b by var a. Stores that result into var b. Shifts it to the right by 0x2 and stores it into var b. then multiplies var b against 0xaaaaaaab. Then the higher 32 bits are moved into EAX. EAX is then shifted to the right by 1 bit and stored into var b. 
+Math is no fun. So I ran through the program once and I learned that this phase would concatenate your previous entry (phase 2) to your entry from this phase. It would then take the length of the new string and store it (lets call it var a). Then it would run a sscan on the concatenated string looking for '\%u' numbers. It takes the number it found in the string and stores it into the stack (var b). Then it divides var b by var a. Stores that result into var b. Shifts it to the right by 0x2 and stores it into var b. then multiplies var b against 0xaaaaaaab. Then the higher 32 bits are moved into EAX. EAX is then shifted to the right by 1 bit and stored into var b. 
 Var a and var b are then compared. 
-So the unsigned int will be divided by the length of the string, then divided by 4. Then multiplied by 0xaaaaaaab. Then divided by 32. Then divived by 2.
+So the unsigned int will be divided by the length of the string, then divided by 4. Then multiplied by 0xaaaaaaab. Then divided by 32. Then divided by 2.
 
 \paragraph{Thoughts}
 This phase was hard but not as big of a difficulty jump compared to the last one. I also don't like math so...
+
+\section{Phase 4}
+\paragraph{Answer}
+-21 -21 -21 -21 -21 (Pretty sure can have more than 1 answer)
+
+\paragraph{Discovery}
+I saw another sscanf was being used on the string entered. I was able to figure out that it was looking for '\%u \%u \%u \%u \%u' and there was a check further down making sure 5 numbers were found. These were then stored at QWORD PTR [rbp-0x48] (call this var arr[5]). After verifying that the 5 numbers were found, it would check if these numbers were greater than the first char in your username. After that it would jump to a loop that would loop around 5 times. Every time it looped it would would look further down arr[5] (basically arr[counter]). Every time it looped, it would take the value at arr[counter] and add it to the first char of your username. Once escaping the loop, the stage would get the length of your username and divide that against what your username's first char now was (after all the additions made in the loop). If the remainder of the addition was 0 then you would pass the stage. 
+I thought at first it would be easiest if I got the char of the username down to 0 because 0/7 would be 0 so I started using negative numbers starting at -7. I just kept trying till I got to -21 and it worked. 
+
+\paragraph{Thoughts}
+I don't like this project anymore. There programs are so simple, yet when you are reading them in stupid assembly, it takes forever.
 
 \end{document}
