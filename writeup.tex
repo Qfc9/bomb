@@ -74,4 +74,11 @@ I thought at first it would be easiest if I got the char of the username down to
 \paragraph{Thoughts}
 I don't like this project anymore. There programs are so simple, yet when you are reading them in stupid assembly, it takes forever.
 
+\section{Full Patch}
+\paragraph{Answer}
+patch/bomb-disarm
+
+\paragraph{Method}
+I found every jump in the stage_defused part of code and changed the jumps from 740e -> eb0e so they will always jump to the correct spot no matter what.
+
 \end{document}
